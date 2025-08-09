@@ -1,23 +1,18 @@
-<h1>My Trips</h1>
+{% extends 'trip/_base.html' %} {% block content %}
+<h1 class="text-4xl underline underline-offset-4 mb-8">My Trips</h1>
 
-{% if user.is_authenticated %}
-    <p>Logged in as <strong>{{ user.username }}</strong></p>
-    <form method="post" action="{% url 'logout' %}" style="display:inline;">
-    {% csrf_token %}
-    <button type="submit" style="background:none;border:none;color:#3B82F6;cursor:pointer;text-decoration:underline;">
-        Logout
-    </button>
-</form>
-{% else %}
-    <p>Please <a href="{% url 'login' %}">Login</a></p>
-{% endif %}
+{% for trip in trips %}
+<div
+  class="bg-gray-50 p-10 rounded shadow my-4 hover:shadow-lg hover:cursor-pointer"
+>
+  <a href="{% url 'trip-detail' trip.pk %}">
+    <p class="text-lg">{{ trip.country }} | {{ trip.city }}</p>
 
-{% if trips %}
-    <ul>
-        {% for trip in trips %}
-            <li>{{ trip.country }} | {{ trip.city }}</li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No trips found.</p>
-{% endif %}
+    <p class="text-sm pt-4">
+      {% if trip.start_date %} {{ trip.start_date|date:"F jS" }} {% else %} TBA
+      {% endif %} to {% if trip.end_date %} {{ trip.end_date|date:"F jS" }} {%
+      else %} TBA {% endif %}
+    </p>
+  </a>
+</div>
+{% endfor %} {% endblock content %}
