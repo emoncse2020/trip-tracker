@@ -1,47 +1,106 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="bg-gray-50 dark:bg-gray-900">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Trip Trak{% endblock %}</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2563EB', // Blue-600
+          },
+        },
+      },
+    }
+  </script>
 </head>
-<body>
+<body class="text-gray-800 dark:text-gray-100">
 
-  <div class="flex flex-col md:flex-row flex h-screen">
+  <!-- Navbar -->
+  <header class="bg-white dark:bg-gray-800 shadow">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
 
-    <div class="md:h-screen bg-gray-700 text-white w-full md:w-1/4 md:max-w-xs py-2 md:pt-8 md:pb-2 flex flex-col">
-      <div class="border-b w-full text-center pb-4 text-2xl">
-        <h1>Trip Trak</h1>
+        <!-- Logo -->
+        <div class="flex items-center space-x-3">
+          <button id="menu-toggle" class="md:hidden text-gray-600 dark:text-gray-300 focus:outline-none">
+            <!-- Menu Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          <a href="{% url 'home' %}">
+            <span class="font-bold text-xl text-primary">Travel Trace</span>
+          </a>
+        </div>
+
+        <!-- Nav Links -->
+        <nav class="hidden md:flex space-x-6">
+          <a href="{% url 'trip-list' %}" class="hover:text-primary transition">My Trips</a>
+          <a href="{% url 'trip-create' %}" class="hover:text-primary transition">New Trip +</a>
+          <a href="{% url 'note-list' %}" class="hover:text-primary transition">My Notes</a>
+          <a href="{% url 'note-create' %}" class="hover:text-primary transition">New Note +</a>
+        </nav>
+
+        <!-- User + Dark Mode -->
+        <div class="flex items-center space-x-4">
+          {% if user.is_authenticated %}
+            <span class="hidden sm:inline">{{ user.username }}</span>
+            <form method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="bg-primary text-white px-3 py-1 rounded hover:bg-blue-700 transition">
+                Logout
+              </button>
+            </form>
+          {% else %}
+            <a href="{% url 'login' %}" class="bg-primary text-white px-3 py-1 rounded hover:bg-blue-700 transition">
+              Login
+            </a>
+          {% endif %}
+        </div>
+
       </div>
-      
-      <div class="pt-4 w-full text-center">
-        <ul class="flex md:flex-col justify-around px-2 md:px-0 pb-2 md:pb-0">
-          <li class="py-2 px-3 md:px-0 hover:bg-gray-600 hover:cursor-pointer"><a href="{% url 'trip-list' %}">My Trips</a></li>
-          <li class="py-2 px-3 md:px-0 hover:bg-gray-600 hover:cursor-pointer"><a href="{% url 'trip-create' %}">New Trip +</a></li>
-          <li class="py-2 px-3 md:px-0 hover:bg-gray-600 hover:cursor-pointer"><a href="{% url 'note-list' %}">My Notes</a></li>
-          <li class="py-2 px-3 md:px-0 hover:bg-gray-600 hover:cursor-pointer"><a href="{% url 'note-create' %}">New Note +</a></li>
-        </ul>
-      </div>
-
-      <div class="mt-auto w-full text-center flex md:flex-col justify-evenly py-2 md:pt-0">
-        <p class="">{{ user.username }}</p>
-        <hr class="my-2">
-       <form method="post" action="{% url 'logout' %}" style="display:inline;">
-    {% csrf_token %}
-    <button type="submit" style="background:none;border:none;color:#3B82F6;cursor:pointer;text-decoration:underline;">
-        Logout
-    </button>
-</form>
-      </div>
-
     </div>
+  </header>
 
-    <div class="w-full md:w-full p-10 overflow-auto">
-      {% block content %}
-      {% endblock content %}
+  <!-- Mobile Sidebar -->
+  <aside id="mobile-menu" class="fixed inset-y-0 left-0 w-64 bg-white dark:bg-gray-800 shadow-lg transform -translate-x-full transition-transform duration-300 md:hidden z-50">
+    <div class="p-4">
+      <h2 class="text-lg font-semibold text-primary mb-4">Menu</h2>
+      <ul class="space-y-3">
+        <li><a href="{% url 'trip-list' %}" class="block hover:text-primary">My Trips</a></li>
+        <li><a href="{% url 'trip-create' %}" class="block hover:text-primary">New Trip +</a></li>
+        <li><a href="{% url 'note-list' %}" class="block hover:text-primary">My Notes</a></li>
+        <li><a href="{% url 'note-create' %}" class="block hover:text-primary">New Note +</a></li>
+      </ul>
     </div>
+  </aside>
 
-  </div>
+  <!-- Main Content -->
+  <main class="max-w-7xl min-h-[800px] mx-auto p-6">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-100 dark:bg-gray-800 py-4 text-center text-sm text-gray-600 dark:text-gray-400">
+    &copy; {{ now|date:"Y" }} Trip Trak — All Rights Reserved
+  </footer>
+
+  <!-- Optional JS for mobile menu toggle -->
+  <script>
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    menuToggle.addEventListener('click', () => {
+      mobileMenu.classList.toggle('-translate-x-full');
+    });
+  </script>
 
 </body>
 </html>

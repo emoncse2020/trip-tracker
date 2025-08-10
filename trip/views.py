@@ -7,6 +7,8 @@ from django.views.generic import TemplateView, CreateView, DetailView, ListView,
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from .models import Trip, Note
 
 
@@ -22,7 +24,8 @@ def trips_list(request):
 
     return render(request, 'trip/trip_list.html', context)
 
-class TripCreateView(CreateView):
+
+class TripCreateView(LoginRequiredMixin,CreateView):
     model = Trip
     success_url = reverse_lazy('trip-list')
     fields = ['city', 'country', 'start_date', 'end_date']
@@ -32,9 +35,8 @@ class TripCreateView(CreateView):
     def form_valid(self, form):
         form.instance.owner = self.request.user
         return super().form_valid(form)
-        
 
-class TripDetailView(DetailView):
+class TripDetailView(LoginRequiredMixin,DetailView):
     model = Trip
 
     def get_context_data(self, **kwargs):
@@ -45,7 +47,8 @@ class TripDetailView(DetailView):
         context['notes'] = notes
         return context
 
-class NoteDetailView(DetailView):
+
+class NoteDetailView(LoginRequiredMixin,DetailView):
     model = Note
 
 class NoteListView(ListView):
@@ -54,8 +57,9 @@ class NoteListView(ListView):
     def get_queryset(self):
         queryset = Note.objects.filter(trip__owner = self.request.user)
         return queryset
-    
-class NoteCreateView(CreateView):
+
+ 
+class NoteCreateView(LoginRequiredMixin,CreateView):
     model = Note
     success_url = reverse_lazy('note-list')
     fields = "__all__"
@@ -67,7 +71,7 @@ class NoteCreateView(CreateView):
         return form
     
 
-class NoteUpdateView(UpdateView):
+class NoteUpdateView(LoginRequiredMixin,UpdateView):
     model = Note
     success_url = reverse_lazy('note-list')
     fields = "__all__"
@@ -79,7 +83,7 @@ class NoteUpdateView(UpdateView):
         return form
     
 
-class NoteDeleteView(DeleteView):
+class NoteDeleteView(LoginRequiredMixin,DeleteView):
     model = Note
     success_url = reverse_lazy('note-list')
 

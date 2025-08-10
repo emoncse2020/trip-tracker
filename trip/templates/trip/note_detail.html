@@ -1,28 +1,44 @@
 {% extends 'trip/_base.html' %}
 
 {% block content %}
-<h1 class="text-4xl underline underline-offset-4 mb-8">Note Details</h1>
+<div class="max-w-3xl mx-auto px-4 py-8">
+    <!-- Title -->
+    <h1 class="text-4xl font-bold mb-8 text-gray-900 dark:text-gray-100">
+        Note Details
+    </h1>
 
-<a class="px-7 py-2 bg-gray-300 rounded md:mr-4 hover:bg-gray-200" href="{% url 'note-update' note.pk %}">Edit</a>
+    <!-- Actions -->
+    <div class="flex items-center gap-4 mb-6">
+        <a href="{% url 'note-update' note.pk %}"
+           class="px-6 py-2 rounded-lg bg-blue-500 text-white font-medium hover:bg-blue-600 transition">
+           Edit
+        </a>
 
-<form class="inline" action="{% url 'note-delete' note.pk %}" method="POST">
-  {% csrf_token %}
-  <input type="submit" class="px-7 py-2 bg-red-300 rounded hover:bg-red-200 hover:cursor-pointer" value="Delete">
-</form>
-
-<div class="bg-gray-50 p-8 rounded shadow my-4">
-  <p class="text-2xl">{{ note.name }}</p>
-  <p class="text-2xl">Description: {{ note.description }}</p>
-  <p class="text-2xl">Type: {{ note.type|title }}</p>
-  <p class="text-2xl">Rating: {{ note.rating }}/5</p>
-  
-  {% if note.img %}
-    <img src="{{ note.img.url }}" alt="{{ note.name }}" class="max-w-full h-auto mt-4 rounded" />
-  {% else %}
-    <div class="w-full h-48 bg-gray-200 flex items-center justify-center rounded mt-4 text-gray-400">
-      No image available
+        <form action="{% url 'note-delete' note.pk %}" method="POST" class="inline">
+            {% csrf_token %}
+            <button type="submit"
+                    class="px-6 py-2 rounded-lg bg-red-500 text-white font-medium hover:bg-red-600 transition">
+                Delete
+            </button>
+        </form>
     </div>
-  {% endif %}
-</div>
 
+    <!-- Card -->
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+        <p class="text-xl font-semibold text-gray-800 dark:text-gray-200">{{ note.name }}</p>
+        <p class="mt-2 text-gray-700 dark:text-gray-300"><span class="font-semibold">Description:</span> {{ note.description }}</p>
+        <p class="mt-2 text-gray-700 dark:text-gray-300"><span class="font-semibold">Type:</span> {{ note.type|title }}</p>
+        <p class="mt-2 text-gray-700 dark:text-gray-300"><span class="font-semibold">Rating:</span> {{ note.rating }}/5</p>
+
+        {% if note.img %}
+            <img src="{{ note.img.url }}"
+                 alt="{{ note.name }}"
+                 class="mt-4 w-full h-auto rounded-lg shadow" />
+        {% else %}
+            <div class="w-full h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center rounded-lg mt-4 text-gray-500 dark:text-gray-300">
+                No image available
+            </div>
+        {% endif %}
+    </div>
+</div>
 {% endblock content %}

@@ -1,18 +1,28 @@
-{% extends 'trip/_base.html' %} {% block content %}
-<h1 class="text-4xl underline underline-offset-4 mb-8">My Trips</h1>
+{% extends 'trip/_base.html' %}
+{% block content %}
+<h1 class="text-3xl font-semibold text-gray-900 border-b border-gray-300 pb-3 mb-8">My Trips</h1>
 
-{% for trip in trips %}
-<div
-  class="bg-gray-50 p-10 rounded shadow my-4 hover:shadow-lg hover:cursor-pointer"
->
-  <a href="{% url 'trip-detail' trip.pk %}">
-    <p class="text-lg">{{ trip.country }} | {{ trip.city }}</p>
+<div class="space-y-6">
+ {% for trip in trips %}
+<a href="{% url 'trip-detail' trip.pk %}" class="block p-6 bg-white rounded-md shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-200">
+  <div class="flex justify-between items-center mb-2">
+    <h2 class="text-lg font-medium text-gray-800">
+      {{ trip.country }} &mdash; {{ trip.city }}
+    </h2>
+    <span class="text-sm text-gray-500">
+      {% if trip.start_date %}{{ trip.start_date|date:"M d, Y" }}{% else %}TBA{% endif %} &mdash; {% if trip.end_date %}{{ trip.end_date|date:"M d, Y" }}{% else %}TBA{% endif %}
+    </span>
+  </div>
 
-    <p class="text-sm pt-4">
-      {% if trip.start_date %} {{ trip.start_date|date:"F jS" }} {% else %} TBA
-      {% endif %} to {% if trip.end_date %} {{ trip.end_date|date:"F jS" }} {%
-      else %} TBA {% endif %}
-    </p>
-  </a>
+  {% if trip.note %}
+  <p class="text-sm text-gray-600 leading-relaxed line-clamp-3">
+    {{ trip.note }}
+  </p>
+  {% endif %}
+</a>
+{% empty %}
+<p class="text-center text-gray-500">You currently have no trips planned.</p>
+{% endfor %}
+
 </div>
-{% endfor %} {% endblock content %}
+{% endblock content %}
