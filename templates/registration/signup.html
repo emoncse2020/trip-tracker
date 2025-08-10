@@ -1,6 +1,43 @@
-<h1>Sign up</h1>
-<form action="{% url "signup" %}" method="POST">
-    {% csrf_token %}
-    {{form.as_p}}
-    <input type="submit" value="Signup">
-</form>
+{% load tailwind_filters %}
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sign Up - TripTrak</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col justify-center items-center px-4">
+
+  <div class="max-w-md w-full bg-white rounded-lg shadow-md p-8">
+    <h1 class="text-3xl font-semibold text-gray-900 mb-6 text-center">Create your account</h1>
+
+    {% if form.errors %}
+    <div class="bg-red-100 text-red-700 px-4 py-3 rounded mb-6">
+      <p>There were errors in your submission. Please check the fields below.</p>
+    </div>
+    {% endif %}
+
+    <form action="{% url 'signup' %}" method="POST" class="space-y-6">
+      {% csrf_token %}
+      {{ form|crispy }}
+
+      <input
+        type="submit"
+        value="Sign Up"
+        class="w-full py-3 bg-green-500 hover:bg-green-600 transition text-white rounded-md cursor-pointer font-semibold"
+      />
+      <input type="hidden" name="next" value="{{ next }}">
+    </form>
+
+    <p class="mt-6 text-center text-gray-600">
+      Already have an account?
+      <a href="{% url 'login' %}" class="text-blue-600 hover:underline font-medium">
+        Log in here
+      </a>
+    </p>
+  </div>
+
+</body>
+</html>
