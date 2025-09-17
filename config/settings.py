@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-fo2fbmg*0y3a5ko(tzcf3_$l^j9(t2(f_#h1da-@-une+2g9-6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS = ["trip-tracker-c6lv.onrender.com", "localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -89,16 +90,16 @@ DATABASES = {
 }
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'trip_tracker',
-#         'USER': 'postgres',
-#         'PASSWORD': 'tasnim',
-#         'HOST': 'localhost',
-#         'PORT': '5432'
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'trip_tracker',
+        'USER': 'postgres',
+        'PASSWORD': 'tasnim',
+        'HOST': 'localhost',
+        'PORT': '5432'
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
